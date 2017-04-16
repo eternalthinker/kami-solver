@@ -9,8 +9,10 @@
 #
 # =============================================================
 
+
 import sys
 import time
+
 
 class Region:
     def __init__(self, name, color, adj=set()):
@@ -51,6 +53,7 @@ class Region:
         map_str = ", ".join([("%s:%s" % (key, regions_map[key].adj)) for key in regions_map])
         #print "After color setting: map-{%s}, regions-%s" % (map_str, regions)
         
+
 class Path:
     def __init__(self, path=[], num_regions=float('inf'), moves_left=0):
         self.path = path
@@ -110,6 +113,7 @@ class Kami:
                 #print "Out of moves!"
                 continue
             cur_node = cur_path.path[-1]
+            cur_path.path[-1] = cur_node.last_move
             num_nodes = 0
             for region_name in cur_node.regions:
                 region = cur_node.regions_map[region_name]
@@ -118,7 +122,7 @@ class Kami:
                         continue
                     num_nodes += 1
                     move = "Move %d: set %s to %s" % (cur_path.moves_left, region.name, self.colors[color])
-                    cur_path.path[-1] = cur_node.last_move
+                    # Deepcopy before region.set_color() call before set_color changes region info due to merging
                     regions_c = cur_node.regions[:]
                     regions_map_c = {}
                     for region_name_c in cur_node.regions_map:
@@ -139,6 +143,7 @@ class Kami:
            
 def main():
 
+    ''' Larger puzzle - uncomment to run
     # Runtime around 45 minutes    
     
     colors = ["BLACK", "CREAM", "RED"]
@@ -170,6 +175,7 @@ def main():
     
     kami = Kami([A , B , C , D , E , F , G , H , I , J , K , L , M , N , O , P , Q , R , S , T , U , V , W , X], colors)
     kami.solve(5)
+    '''
     
     '''
     colors = ["RED", "BLACK", "CREAM"]
@@ -180,7 +186,6 @@ def main():
     kami.solve(1)
     '''
     
-    '''
     colors = ["ORANGE", "BLUE", "CREAM"]
     A = Region("A", 2, {'B', 'D', 'E'})
     B = Region("B", 0, {'A', 'D', 'C'})
@@ -188,8 +193,7 @@ def main():
     D = Region("D", 1, {'A', 'B', 'C', 'E'})
     E = Region("E", 0, {'D', 'A', 'C'})
     kami = Kami([A, B, C, D, E], colors)
-    kami.solve(2)
-    '''
+    kami.solve(2) # Solve within a maximum of 2 moves
     
     '''
     colors = ["ORANGE", "BLUE", "CREAM", "BLACK"]

@@ -7,8 +7,10 @@
 #
 # ==================================================
 
+
 import sys
 import time
+
 
 class Region:
     def __init__(self, name, color, adj=set()):
@@ -49,6 +51,7 @@ class Region:
         map_str = ", ".join([("%s:%s" % (key, regions_map[key].adj)) for key in regions_map])
         #print "After color setting: map-{%s}, regions-%s" % (map_str, regions)
            
+
 class Kami:
     def __init__(self, regions_list, colors):
         # debug vars
@@ -88,6 +91,7 @@ class Kami:
                 move = "Move %d: set %s to %s" % (moves_left, region.name, colors[color])
                 #print move
                 new_path = path[:] + [move]
+                # Deepcopy before region.set_color() call before set_color changes region info due to merging
                 regions_c = regions[:]
                 regions_map_c = {}
                 for region_name_c in regions_map:
@@ -101,9 +105,10 @@ class Kami:
             print "%s:%s  " % (region.name, self.colors[region.color]),
         print ""
            
+
 def main():
     
-    
+    ''' Larger puzzle - uncomment to run
     # Around 1 hr runtime
     colors = ["BLACK", "CREAM", "RED"]
     
@@ -134,6 +139,7 @@ def main():
     
     kami = Kami([A , B , C , D , E , F , G , H , I , J , K , L , M , N , O , P , Q , R , S , T , U , V , W , X], colors)
     kami.solve(5)
+    '''
     
     '''
     colors = ["RED", "BLACK", "CREAM"]
@@ -144,7 +150,6 @@ def main():
     kami.solve(1)
     '''
     
-    ''' 
     colors = ["ORANGE", "BLUE", "CREAM"]
     A = Region("A", 2, {'B', 'D', 'E'})
     B = Region("B", 0, {'A', 'D', 'C'})
@@ -152,8 +157,7 @@ def main():
     D = Region("D", 1, {'A', 'B', 'C', 'E'})
     E = Region("E", 0, {'D', 'A', 'C'})
     kami = Kami([A, B, C, D, E], colors)
-    kami.solve(2)
-    '''
+    kami.solve(2) # Solve within a maximum of 2 moves
     
     '''
     colors = ["ORANGE", "BLUE", "CREAM", "BLACK"]
@@ -172,12 +176,3 @@ def main():
 if __name__ == "__main__":
     main()      
            
-           
-           
-           
-           
-           
-           
-           
-           
-            

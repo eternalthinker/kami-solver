@@ -31,6 +31,6 @@ Solution found:
         Move 1: set B+E+D to CREAM
 ```
 
-Following is an example involving more regions. This could run for a while due size of the puzzle:
+Following is an example involving more regions. This could run for a while due to the size of the puzzle:
 
 <img src="https://github.com/eternalthinker/kami-solver/blob/master/kami-2-puzzle-examples/kami3_regions.jpg" width="250px"/> 

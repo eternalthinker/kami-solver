@@ -28,9 +28,26 @@ kami.solve(2) # Solve within a maximum of 2 moves
 Solution found:
         Begin
         Move 2: set D to ORANGE
-        Move 1: set B+E+D to CREAM
+        Move 1: set B+E+D to CREAM
+Finished in 0.01346732 seconds
 ```
 
-Following is an example involving more regions. This could run for a while due to the size of the puzzle:
+Following is an example involving more regions. This could run for a few seconds due to the size of the puzzle:
 
-<img src="https://github.com/eternalthinker/kami-solver/blob/master/kami-2-puzzle-examples/kami3_regions.jpg" width="250px"/> 
+<img src="https://github.com/eternalthinker/kami-solver/blob/master/kami-2-puzzle-examples/kami3_regions.jpg" width="250px"/>
+
+```python
+# See source for complete puzzle representation
+kami = Kami([A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X], colors)
+kami.solve(5)
+```
+```
+Solution found!
+	Begin
+	Move 5: set K to CREAM
+	Move 4: set K+J+L+D to RED
+	Move 3: set P+R+K+J+L+D to BLACK
+	Move 2: set C+E+I+M+U+T+P+R+K+J+L+D to CREAM
+	Move 1: set B+F+H+O+N+Q+S+C+E+I+M+U+T+P+R+K+J+L+D+W+V to BLACK
+Finished in 9.13819789886 seconds 
+```

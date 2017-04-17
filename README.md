@@ -32,7 +32,7 @@ Solution found:
 Finished in 0.01346732 seconds
 ```
 
-Following is an example involving more regions. This could run for a while due to the size of the puzzle:
+Following is an example involving more regions. This could run for a few seconds due to the size of the puzzle:
 
 <img src="https://github.com/eternalthinker/kami-solver/blob/master/kami-2-puzzle-examples/kami3_regions.jpg" width="250px"/>
 

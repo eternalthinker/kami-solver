@@ -20,7 +20,7 @@ class Region:
         self.color = color
         self.adj = adj
         
-    def set_color(self, color, regions, regions_map):
+    def set_color(self, color, regions, regions_map, color_counts):
         map_str = ", ".join([("%s:%s" % (key, regions_map[key].adj)) for key in regions_map])
         #print "Setting color of %s to %s with map-{%s}, regions-%s" % (self.name, color, map_str, regions)
         if self.color == color:
@@ -35,6 +35,8 @@ class Region:
                 new_adj = new_adj.union(a_region.adj)
         # Merge any adj regions of same color
         if len(merged_regions) > 0:
+            color_counts[self.color] -= 1
+            color_counts[color] -= len(merged_regions)-1
             merged_regions.add(self.name)
             new_adj = new_adj.union(self.adj.difference(merged_regions))
             for m_region in merged_regions:
@@ -49,21 +51,24 @@ class Region:
                 adj_region.adj = adj_region.adj.difference(merged_regions)
                 adj_region.adj.add(new_region.name)
         else:
-           regions_map[self.name].color = color
-        map_str = ", ".join([("%s:%s" % (key, regions_map[key].adj)) for key in regions_map])
+            color_counts[self.color] -= 1
+            regions_map[self.name].color = color
+        #map_str = ", ".join([("%s:%s" % (key, regions_map[key].adj)) for key in regions_map])
         #print "After color setting: map-{%s}, regions-%s" % (map_str, regions)
         
 
 class Path:
-    def __init__(self, path=[], num_regions=float('inf'), moves_left=0):
+    def __init__(self, path=[], num_regions=float('inf'), moves_left=0, color_counts=[]):
         self.path = path
         self.num_regions = num_regions
         self.moves_left = moves_left
+        self.color_counts = color_counts
         
-    def update(self, node, num_regions, moves_left):
+    def update(self, node, num_regions, moves_left, color_counts):
         self.path.append(node)
         self.num_regions = num_regions
         self.moves_left = moves_left
+        self.color_counts = color_counts
         
     def __cmp__(self, other):
         return self.num_regions - other.num_regions
@@ -90,28 +95,20 @@ class Kami:
         self.colors = colors
         self.regions = []
         self.regions_map = {}
+        self.color_counts = [0 for _ in colors]
         for region in regions_list:
             self.regions.append(region.name)
             self.regions_map[region.name] = region
+            self.color_counts[region.color] += 1
             
     def solve(self, num_moves):
         self.start_time = time.time()
         first_node = KamiNode(self.regions, self.regions_map)
-        paths = [ Path([first_node], len(self.regions), num_moves)  ]
+        paths = [ Path([first_node], len(self.regions), num_moves, self.color_counts)  ]
         while len(paths) > 0:
             paths.sort()
             cur_path = paths.pop(0)
             #print "Selected %s %s %s" % (cur_path.path, cur_path.num_regions, cur_path.moves_left)
-            if cur_path.num_regions == 1:
-                print "Solution found:"
-                for move in cur_path.path:
-                    print "\t", move
-                exec_time = time.time() - self.start_time
-                print "Finished in %s seconds" % exec_time
-                sys.exit(0)
-            if cur_path.moves_left <= 0:
-                #print "Out of moves!"
-                continue
             cur_node = cur_path.path[-1]
             cur_path.path[-1] = cur_node.last_move
             num_nodes = 0
@@ -124,14 +121,31 @@ class Kami:
                     move = "Move %d: set %s to %s" % (cur_path.moves_left, region.name, self.colors[color])
                     # Deepcopy before region.set_color() call before set_color changes region info due to merging
                     regions_c = cur_node.regions[:]
+                    color_counts_c = cur_path.color_counts[:]
                     regions_map_c = {}
                     for region_name_c in cur_node.regions_map:
                         region_c = cur_node.regions_map[region_name_c]
                         regions_map_c[region_name_c] = Region(region_c.name, region_c.color, set(list(region_c.adj)))
-                    region.set_color(color, regions_c, regions_map_c)
+                    region.set_color(color, regions_c, regions_map_c, color_counts_c)
+                    if len(regions_c) == 1:
+                        print "Solution found!"
+                        for move0 in cur_path.path:
+                            print "\t", move0
+                        print "\t", move
+                        exec_time = time.time() - self.start_time
+                        print "Finished in %s seconds" % exec_time
+                        sys.exit(0)
+                    if cur_path.moves_left-1 <= 0:
+                        #print "Out of moves. Pruning path"
+                        continue
+                    # Thanks <https://github.com/brownbytes> for this heuristic. Hugely cuts down on run time! (45mins -> 9secs for large example)
+                    num_uniq_colors = sum([1 for i in color_counts_c if i > 0])
+                    if num_uniq_colors - (cur_path.moves_left-1) > 1:
+                        #print "Certain failure. Pruning path"
+                        continue
                     new_node = KamiNode(regions_c, regions_map_c, move)
                     new_path = Path(cur_path.path[:])
-                    new_path.update(new_node, len(regions_c), cur_path.moves_left-1)
+                    new_path.update(new_node, len(regions_c), cur_path.moves_left-1, color_counts_c)
                     paths.append(new_path)
             #print "==== Generated %d paths" % num_nodes
     
@@ -143,8 +157,7 @@ class Kami:
            
 def main():
 
-    ''' Larger puzzle - uncomment to run
-    # Runtime around 45 minutes    
+    # Runtime around 9 seconds    
     
     colors = ["BLACK", "CREAM", "RED"]
     
@@ -175,7 +188,6 @@ def main():
     
     kami = Kami([A , B , C , D , E , F , G , H , I , J , K , L , M , N , O , P , Q , R , S , T , U , V , W , X], colors)
     kami.solve(5)
-    '''
     
     '''
     colors = ["RED", "BLACK", "CREAM"]
@@ -186,6 +198,7 @@ def main():
     kami.solve(1)
     '''
     
+    '''
     colors = ["ORANGE", "BLUE", "CREAM"]
     A = Region("A", 2, {'B', 'D', 'E'})
     B = Region("B", 0, {'A', 'D', 'C'})
@@ -194,6 +207,7 @@ def main():
     E = Region("E", 0, {'D', 'A', 'C'})
     kami = Kami([A, B, C, D, E], colors)
     kami.solve(2) # Solve within a maximum of 2 moves
+    '''
     
     '''
     colors = ["ORANGE", "BLUE", "CREAM", "BLACK"]

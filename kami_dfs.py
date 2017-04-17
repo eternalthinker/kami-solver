@@ -6,6 +6,11 @@
 #   DFS based path finding
 #
 # ==================================================
+#
+# This is a naive bruteforce method! 
+# Check kami_greedy.py which has better optimizations 
+# and gives much faster solutions for complex puzzles.
+#
 
 
 import sys

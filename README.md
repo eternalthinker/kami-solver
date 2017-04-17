@@ -42,12 +42,12 @@ kami = Kami([A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W
 kami.solve(5)
 ```
 ```
-Solution found:
-    Begin
-    Move 5: set K to CREAM
-    Move 4: set K+J+D+L to RED
-    Move 3: set P+R+K+J+D+L to BLACK
-    Move 2: set C+E+I+M+U+T+P+R+K+J+D+L to CREAM
-    Move 1: set B+F+H+O+N+Q+S+W+V+C+E+I+M+U+T+P+R+K+J+D+L to BLACK
-Finished in 2590.27052498 seconds 
+Solution found!
+	Begin
+	Move 5: set K to CREAM
+	Move 4: set K+J+L+D to RED
+	Move 3: set P+R+K+J+L+D to BLACK
+	Move 2: set C+E+I+M+U+T+P+R+K+J+L+D to CREAM
+	Move 1: set B+F+H+O+N+Q+S+C+E+I+M+U+T+P+R+K+J+L+D+W+V to BLACK
+Finished in 9.13819789886 seconds 
 ```

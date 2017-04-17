@@ -134,7 +134,7 @@ class Kami:
                         print "\t", move
                         exec_time = time.time() - self.start_time
                         print "Finished in %s seconds" % exec_time
-                        sys.exit(0)
+                        sys.exit(0) # Comment this to print all possible solutions
                     if cur_path.moves_left-1 <= 0:
                         #print "Out of moves. Pruning path"
                         continue

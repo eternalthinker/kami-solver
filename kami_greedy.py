@@ -5,9 +5,9 @@
 # Description:
 #   Solution finder for KAMI 2 game on IOS
 #   Greedy logic based path finding 
-#   Prefers paths with minimum number of regions left
-#
-# =============================================================
+#    - Prefers paths with minimum number of regions left
+#    - Prunes paths where unique_colors_in_board - moves_left > 1
+# ================================================================
 
 
 import sys

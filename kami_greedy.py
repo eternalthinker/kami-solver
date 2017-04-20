@@ -19,9 +19,15 @@ class Region:
         self.name = name
         self.color = color
         self.adj = adj
+
+    def __cmp__(self, other):
+        return (len(other.adj) - len(self.adj))
+
+    def __str__(self):
+        return "%s:%s" %(self.name, len(self.adj))
         
     def set_color(self, color, regions, regions_map, color_counts):
-        map_str = ", ".join([("%s:%s" % (key, regions_map[key].adj)) for key in regions_map])
+        #map_str = ", ".join([("%s:%s" % (key, regions_map[key].adj)) for key in regions_map])
         #print "Setting color of %s to %s with map-{%s}, regions-%s" % (self.name, color, map_str, regions)
         if self.color == color:
             return
@@ -111,13 +117,14 @@ class Kami:
             #print "Selected %s %s %s" % (cur_path.path, cur_path.num_regions, cur_path.moves_left)
             cur_node = cur_path.path[-1]
             cur_path.path[-1] = cur_node.last_move
-            num_nodes = 0
+            # num_nodes = 0
+            cur_node.regions.sort() # Optimization: color regions with most adjacent regions first
             for region_name in cur_node.regions:
                 region = cur_node.regions_map[region_name]
                 for color in range(len(self.colors)):
                     if region.color == color:
                         continue
-                    num_nodes += 1
+                    # num_nodes += 1
                     move = "Move %d: set %s to %s" % (cur_path.moves_left, region.name, self.colors[color])
                     # Deepcopy before region.set_color() call before set_color changes region info due to merging
                     regions_c = cur_node.regions[:]
@@ -188,7 +195,7 @@ def main():
     
     kami = Kami([A , B , C , D , E , F , G , H , I , J , K , L , M , N , O , P , Q , R , S , T , U , V , W , X], colors)
     kami.solve(5)
-    
+
     '''
     colors = ["RED", "BLACK", "CREAM"]
     A = Region("A", 0, {"B", "C"})

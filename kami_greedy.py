@@ -145,7 +145,8 @@ class Kami:
                     if cur_path.moves_left-1 <= 0:
                         #print "Out of moves. Pruning path"
                         continue
-                    # Thanks <https://github.com/brownbytes> for this heuristic. Hugely cuts down on run time! (45mins -> 9secs for large example)
+                    # Thanks <https://github.com/brownbytes> for this heuristic. 
+                    # Hugely cuts down on run time! (45mins -> 9secs for large example)
                     num_uniq_colors = sum([1 for i in color_counts_c if i > 0])
                     if num_uniq_colors - (cur_path.moves_left-1) > 1:
                         #print "Certain failure. Pruning path"

@@ -49,5 +49,5 @@ Solution found!
 	Move 3: set P+R+K+J+L+D to BLACK
 	Move 2: set C+E+I+M+U+T+P+R+K+J+L+D to CREAM
 	Move 1: set B+F+H+O+N+Q+S+C+E+I+M+U+T+P+R+K+J+L+D+W+V to BLACK
-Finished in 9.13819789886 seconds 
+Finished in 4.11509108543 seconds
 ```

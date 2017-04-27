@@ -43,11 +43,11 @@ kami.solve(5)
 ```
 ```
 Solution found!
-	Begin
-	Move 5: set K to CREAM
-	Move 4: set K+J+L+D to RED
-	Move 3: set P+R+K+J+L+D to BLACK
-	Move 2: set C+E+I+M+U+T+P+R+K+J+L+D to CREAM
-	Move 1: set B+F+H+O+N+Q+S+C+E+I+M+U+T+P+R+K+J+L+D+W+V to BLACK
-Finished in 4.11509108543 seconds
+        Begin
+        Move 5: set R to CREAM
+        Move 4: set Q+S+R+L to RED
+        Move 3: set P+K+Q+S+R+L to BLACK
+        Move 2: set C+E+I+M+P+K+Q+S+R+L+U+T to CREAM
+        Move 1: set B+D+F+H+J+O+N+C+E+I+M+P+K+Q+S+R+L+U+T+W+V to BLACK
+Finished in 4.06057810783 seconds
 ```

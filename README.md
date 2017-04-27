@@ -32,6 +32,13 @@ Solution found:
 Finished in 0.01346732 seconds
 ```
 
+There is also a `solve_i()` method which attempts the puzzle without any knowledge of the optimal number of moves.
+It uses iterative deepening while calling the above `solve(n)` method:  
+```python
+kami = Kami([A, B, C, D, E], colors)
+kami.solve_i() # Finds solution and minimal number of moves required
+```
+
 Following is an example involving more regions. This could run for a few seconds due to the size of the puzzle:
 
 <img src="https://github.com/eternalthinker/kami-solver/blob/master/kami-2-puzzle-examples/kami3_regions.jpg" width="250px"/>

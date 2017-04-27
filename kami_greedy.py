@@ -97,7 +97,6 @@ class KamiNode:
 class Kami:
     def __init__(self, regions_list, colors):
         # debug vars
-        self.start_time = 0
         # end of debug vars
         self.colors = colors
         self.regions = []
@@ -109,7 +108,7 @@ class Kami:
             self.color_counts[region.color] += 1
             
     def solve(self, num_moves):
-        self.start_time = time.time()
+        start_time = time.time()
         first_node = KamiNode(self.regions, self.regions_map)
         paths = [ Path([first_node], len(self.regions), num_moves, self.color_counts) ]
         while len(paths) > 0:
@@ -139,14 +138,14 @@ class Kami:
                         for move0 in cur_path.path:
                             print "\t", move0
                         print "\t", move
-                        exec_time = time.time() - self.start_time
+                        exec_time = time.time() - start_time
                         print "Finished in %s seconds" % exec_time
-                        sys.exit(0) # Comment this to print all possible solutions
+                        return True # Comment this to print all possible solutions
                     if cur_path.moves_left-1 <= 0:
                         #print "Out of moves. Pruning path"
                         continue
                     # Thanks <https://github.com/brownbytes> for this heuristic. 
-                    # Hugely cuts down on run time! (45mins -> 9secs for large example)
+                    # Hugely cuts down on run time! (45mins -> 4secs for large example)
                     num_uniq_colors = sum([1 for i in color_counts_c if i > 0])
                     if num_uniq_colors - (cur_path.moves_left-1) > 1:
                         #print "Certain failure. Pruning path"
@@ -156,6 +155,17 @@ class Kami:
                     new_path.update(new_node, len(regions_c), cur_path.moves_left-1, color_counts_c)
                     heapq.heappush(paths, new_path)
             #print "==== Generated %d paths" % num_nodes
+        return False
+
+    def solve_i(self):
+        start_time = time.time()
+        is_solved = False
+        depth = 0
+        while not is_solved:
+            depth += 1
+            is_solved = self.solve(depth)
+        exec_time = time.time() - start_time
+        print "All iterations finished in %s seconds. Optimal move count: %s" % (exec_time, depth)
     
     def print_regions(self):
         for region in self.regions_map.values():
@@ -165,7 +175,7 @@ class Kami:
            
 def main():
 
-    # Runtime around 9 seconds    
+    # Runtime around 4 seconds    
     
     colors = ["BLACK", "CREAM", "RED"]
     
@@ -195,7 +205,10 @@ def main():
     X = Region("X", 0, {'V', 'W'})
     
     kami = Kami([A , B , C , D , E , F , G , H , I , J , K , L , M , N , O , P , Q , R , S , T , U , V , W , X], colors)
+    print "Solving with the knowledge that optimal number of moves is 5:"
     kami.solve(5)
+    print "\nSolving without knowledge of optimal number of moves:"
+    kami.solve_i()
 
     '''
     colors = ["RED", "BLACK", "CREAM"]

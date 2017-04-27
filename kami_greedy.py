@@ -12,6 +12,7 @@
 
 import sys
 import time
+import heapq
 
 
 class Region:
@@ -110,10 +111,9 @@ class Kami:
     def solve(self, num_moves):
         self.start_time = time.time()
         first_node = KamiNode(self.regions, self.regions_map)
-        paths = [ Path([first_node], len(self.regions), num_moves, self.color_counts)  ]
+        paths = [ Path([first_node], len(self.regions), num_moves, self.color_counts) ]
         while len(paths) > 0:
-            paths.sort()
-            cur_path = paths.pop(0)
+            cur_path = heapq.heappop(paths)
             #print "Selected %s %s %s" % (cur_path.path, cur_path.num_regions, cur_path.moves_left)
             cur_node = cur_path.path[-1]
             cur_path.path[-1] = cur_node.last_move
@@ -154,7 +154,7 @@ class Kami:
                     new_node = KamiNode(regions_c, regions_map_c, move)
                     new_path = Path(cur_path.path[:])
                     new_path.update(new_node, len(regions_c), cur_path.moves_left-1, color_counts_c)
-                    paths.append(new_path)
+                    heapq.heappush(paths, new_path)
             #print "==== Generated %d paths" % num_nodes
     
     def print_regions(self):

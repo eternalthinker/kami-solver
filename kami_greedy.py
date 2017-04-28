@@ -210,6 +210,41 @@ def main():
     print "\nSolving without knowledge of optimal number of moves:"
     kami.solve_i()
 
+    print " 9 moves puzzle"
+    colors = ['GREEN', 'CREAM', 'BLACK', 'RED']
+    #            0        1        2       3
+
+    A = Region("A", 0, {'E', 'F', 'B'})
+    B = Region("B", 3, {'A', 'G', 'H', 'C'})
+    C = Region("C", 1, {'B', 'I', 'D'})
+    D = Region("D", 2, {'C', 'I', 'L', 'K'})
+    D1 = Region("D1", 2, {'Q', 'S', 'W', 'Z'})
+    E = Region("E", 1, {'A', 'J'})
+    F = Region("F", 3, {'A', 'G', 'K'})
+    G = Region("G", 0, {'B', 'F', 'H', 'K'})
+    H = Region("H", 1, {'B', 'G', 'I', 'L'})
+    I = Region("I", 3, {'C', 'D', 'H', 'L'})
+    J = Region("J", 0, {'E', 'M'})
+    K = Region("K", 1, {'F', 'G', 'L', 'D'})
+    L = Region("L", 0, {'H', 'I', 'K', 'D'})
+    M = Region("M", 3, {'J', 'N'})
+    N = Region("N", 2, {'M', 'O'})
+    O = Region("O", 3, {'N', 'R'})
+    P = Region("P", 3, {'Q', 'U', 'X'})
+    Q = Region("Q", 1, {'P', 'U', 'S','D1'})
+    R = Region("R", 0, {'O', 'T'})
+    S = Region("S", 0, {'Q', 'V', 'W', 'D1'})
+    T = Region("T", 1, {'R', 'X'})
+    U = Region("U", 0, {'P', 'Q', 'V', 'Y'})
+    V = Region("V", 1, {'S', 'U', 'W', 'Y'})
+    W = Region("W", 3, {'S', 'V', 'Z', 'D1'})
+    X = Region("X", 0, {'P', 'T', 'Y'})
+    Y = Region("Y", 3, {'U', 'V', 'X', 'Z'})
+    Z = Region("Z", 1, {'W', 'Y', 'D1'})
+
+    kami = Kami([A, B, C, D, D1, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z], colors)
+    kami.solve(9)
+
     '''
     colors = ["RED", "BLACK", "CREAM"]
     A = Region("A", 0, {"B", "C"})

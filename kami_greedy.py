@@ -207,8 +207,8 @@ def main():
     kami = Kami([A , B , C , D , E , F , G , H , I , J , K , L , M , N , O , P , Q , R , S , T , U , V , W , X], colors)
     print "Solving with the knowledge that optimal number of moves is 5:"
     kami.solve(5)
-    print "\nSolving without knowledge of optimal number of moves:"
-    kami.solve_i()
+    #print "\nSolving without knowledge of optimal number of moves:"
+    #kami.solve_i()
 
     '''
     print " 9 moves puzzle"

@@ -1,6 +1,6 @@
 # kami-solver
 Solution finder for [KAMI 2](https://itunes.apple.com/us/app/kami-2/id1133161444?mt=8) game on IOS (or [KAMI](https://play.google.com/store/apps/details?id=air.com.stateofplaygames.kamifree&hl=en) on Android). 
-Uses DFS or Greedy search (slightly faster) to reach a solution.
+Uses DFS (naive) or A* search (much much faster) to reach a solution.
 
 The puzzle is entered as separate regions, each with a unique id and information on color and adjacent regions.
 
@@ -39,7 +39,7 @@ kami = Kami([A, B, C, D, E], colors)
 kami.solve_i() # Finds solution and minimal number of moves required
 ```
 
-Following is an example involving more regions. This could run for a few seconds due to the size of the puzzle:
+Following is an example involving more regions. As the number of steps increase, the solver could run for a few seconds due to the size of the puzzle:
 
 <img src="https://github.com/eternalthinker/kami-solver/blob/master/kami-2-puzzle-examples/kami3_regions.jpg" width="250px"/>
 
@@ -56,5 +56,5 @@ Solution found!
         Move 3: set P+K+Q+S+R+L to BLACK
         Move 2: set C+E+I+M+P+K+Q+S+R+L+U+T to CREAM
         Move 1: set B+D+F+H+J+O+N+C+E+I+M+P+K+Q+S+R+L+U+T+W+V to BLACK
-Finished in 4.06057810783 seconds
+Finished in 0.36057810783 seconds
 ```

@@ -117,7 +117,7 @@ class Kami:
             cur_node = cur_path.path[-1]
             cur_path.path[-1] = cur_node.last_move
             # num_nodes = 0
-            cur_node.regions.sort() # Optimization: color regions with most adjacent regions first
+            cur_node.regions.sort(key=lambda r: len(cur_node.regions_map[r].adj), reverse=True) # Optimization: color regions with most adjacent regions first
             for region_name in cur_node.regions:
                 region = cur_node.regions_map[region_name]
                 for color in range(len(self.colors)):

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-#!/usr/bin/env python
 #
 # Author: Rahul Anand <et@eternalthinker.co>
 # Description:
 #   Solution finder for KAMI 2 game on IOS
-#   Greedy logic based path finding 
-#    - Prefers paths with minimum number of regions left
+#   A* search based path finding 
+#    - Prefers paths with minimum number of regions remaining
+#    - While coloring, first pick regions with maximum adjacent regions
 #    - Prunes paths where unique_colors_in_board - moves_left > 1
 # ================================================================
 
@@ -70,15 +70,17 @@ class Path:
         self.num_regions = num_regions
         self.moves_left = moves_left
         self.color_counts = color_counts
+        self.h = len(self.path) + self.num_regions
         
     def update(self, node, num_regions, moves_left, color_counts):
         self.path.append(node)
         self.num_regions = num_regions
         self.moves_left = moves_left
         self.color_counts = color_counts
+        self.h = len(self.path) + self.num_regions
         
     def __cmp__(self, other):
-        return self.num_regions - other.num_regions
+        return self.h - other.h
         
     def __str__(self):
         return "<regions:%d, path:%d>" % (self.num_regions, len(self.path))
@@ -175,8 +177,6 @@ class Kami:
            
 def main():
 
-    # Runtime around 4 seconds    
-    
     colors = ["BLACK", "CREAM", "RED"]
     
     A = Region("A", 0, {'B', 'H'})
@@ -207,8 +207,8 @@ def main():
     kami = Kami([A , B , C , D , E , F , G , H , I , J , K , L , M , N , O , P , Q , R , S , T , U , V , W , X], colors)
     print "Solving with the knowledge that optimal number of moves is 5:"
     kami.solve(5)
-    #print "\nSolving without knowledge of optimal number of moves:"
-    #kami.solve_i()
+    # print "\nSolving without knowledge of optimal number of moves:"
+    # kami.solve_i()
 
     '''
     print " 9 moves puzzle"

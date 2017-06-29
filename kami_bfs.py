@@ -86,7 +86,7 @@ class Path:
         self.moves_left = moves_left
         self.color_counts = color_counts
         self.g = 1.5
-        self.h = 1.3
+        self.h = 0
         self.f = self.g*len(self.path) + self.h*self.num_regions
         
     def update(self, node, num_regions, moves_left, color_counts):
@@ -97,7 +97,7 @@ class Path:
         self.f = self.g*len(self.path) + self.h*self.num_regions
         
     def __cmp__(self, other):
-        return self.f - other.f
+        return -(self.f - other.f)
         
     def __str__(self):
         return "<regions:%d, path:%d>" % (self.num_regions, len(self.path))
@@ -140,7 +140,7 @@ class Kami:
             # cur_node.regions.sort(key=lambda r: cur_node.regions_map[r].get_num_adj(color, cur_node.regions_map), reverse=True)
             region_counts = map(lambda r: (cur_path.color_counts[cur_node.regions_map[r].color], r), cur_node.regions)
             cur_node.regions = [region for (count, region) in sorted(region_counts)]
-            #cur_node.regions.sort(key=lambda r: cur_node.regions_map[r].num_sub_regions, reverse=True)
+            cur_node.regions.sort(key=lambda r: cur_node.regions_map[r].num_sub_regions, reverse=True)
             for region_name in cur_node.regions:
                 region = cur_node.regions_map[region_name]
                 adj_color_counts = region.get_adj_color_counts([0 for _ in self.colors], cur_node.regions_map)

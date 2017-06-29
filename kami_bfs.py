@@ -20,6 +20,7 @@ class Region:
         self.name = name
         self.color = color
         self.adj = adj
+        self.num_sub_regions = self.name.count("+") + 1
 
     def __cmp__(self, other):
         return (len(other.adj) - len(self.adj))
@@ -33,10 +34,16 @@ class Region:
             if regions_map[a_name].color == color:
                 count += 1
         return count
+
+    def get_adj_color_counts(self, color_counts, regions_map):
+        for a_name in self.adj:
+            color_counts[regions_map[a_name].color] += 1
+        return color_counts
         
     def set_color(self, color, regions, regions_map, color_counts):
-        #map_str = ", ".join([("%s:%s" % (key, regions_map[key].adj)) for key in regions_map])
-        #print "Setting color of %s to %s with map-{%s}, regions-%s" % (self.name, color, map_str, regions)
+        # map_str = ", ".join([("%s:%s" % (key, regions_map[key].adj)) for key in regions_map])
+        # print "Setting color of %s to %s with map-{%s}, regions-%s" % (self.name, color, map_str, regions)
+        # print "Setting color of %s to %s with regions-%s" % (self.name, color, regions)
         if self.color == color:
             return
         merged_regions = set()
@@ -130,10 +137,16 @@ class Kami:
             cur_path.path[-1] = cur_node.last_move
             # num_nodes = 0
             # cur_node.regions.sort(key=lambda r: len(cur_node.regions_map[r].adj), reverse=True) # Optimization: color regions with most adjacent regions first
-            for color in range(len(self.colors)):
-                cur_node.regions.sort(key=lambda r: cur_node.regions_map[r].get_num_adj(color, cur_node.regions_map), reverse=True)
-                for region_name in cur_node.regions:
-                    region = cur_node.regions_map[region_name]
+            # cur_node.regions.sort(key=lambda r: cur_node.regions_map[r].get_num_adj(color, cur_node.regions_map), reverse=True)
+            region_counts = map(lambda r: (cur_path.color_counts[cur_node.regions_map[r].color], r), cur_node.regions)
+            cur_node.regions = [region for (count, region) in sorted(region_counts)]
+            #cur_node.regions.sort(key=lambda r: cur_node.regions_map[r].num_sub_regions, reverse=True)
+            for region_name in cur_node.regions:
+                region = cur_node.regions_map[region_name]
+                adj_color_counts = region.get_adj_color_counts([0 for _ in self.colors], cur_node.regions_map)
+                colors = [color for color in range(len(self.colors))]
+                colors = [color for (count, color) in filter(lambda p: p[0] > 0, sorted(zip(adj_color_counts, colors), reverse=True))]
+                for color in colors:
                     if region.color == color:
                         continue
                     # num_nodes += 1
@@ -221,7 +234,6 @@ def main():
     # print "\nSolving without knowledge of optimal number of moves:"
     # kami.solve_i()
 
-    '''
     print " 9 moves puzzle"
     colors = ['GREEN', 'CREAM', 'BLACK', 'RED']
     #            0        1        2       3
@@ -256,7 +268,6 @@ def main():
 
     kami = Kami([A, B, C, D, D1, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z], colors)
     kami.solve(9)
-    '''
 
     '''
     colors = ["RED", "BLACK", "CREAM"]

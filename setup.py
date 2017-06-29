@@ -3,6 +3,6 @@ from Cython.Build import cythonize
 
 setup(
   name = 'Hello world app',
-  ext_modules = cythonize("kami_greedy.py"),
+  ext_modules = cythonize("kami_bfs.py"),
 )
 

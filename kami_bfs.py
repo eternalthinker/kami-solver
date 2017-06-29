@@ -26,6 +26,13 @@ class Region:
 
     def __str__(self):
         return "%s:%s" %(self.name, len(self.adj))
+
+    def get_num_adj(self, color, regions_map):
+        count = 0
+        for a_name in self.adj:
+            if regions_map[a_name].color == color:
+                count += 1
+        return count
         
     def set_color(self, color, regions, regions_map, color_counts):
         #map_str = ", ".join([("%s:%s" % (key, regions_map[key].adj)) for key in regions_map])
@@ -65,22 +72,25 @@ class Region:
         
 
 class Path:
+
     def __init__(self, path=[], num_regions=float('inf'), moves_left=0, color_counts=[]):
         self.path = path
         self.num_regions = num_regions
         self.moves_left = moves_left
         self.color_counts = color_counts
-        self.h = len(self.path) + self.num_regions
+        self.g = 1.5
+        self.h = 1.3
+        self.f = self.g*len(self.path) + self.h*self.num_regions
         
     def update(self, node, num_regions, moves_left, color_counts):
         self.path.append(node)
         self.num_regions = num_regions
         self.moves_left = moves_left
         self.color_counts = color_counts
-        self.h = len(self.path) + self.num_regions
+        self.f = self.g*len(self.path) + self.h*self.num_regions
         
     def __cmp__(self, other):
-        return self.h - other.h
+        return self.f - other.f
         
     def __str__(self):
         return "<regions:%d, path:%d>" % (self.num_regions, len(self.path))
@@ -119,10 +129,11 @@ class Kami:
             cur_node = cur_path.path[-1]
             cur_path.path[-1] = cur_node.last_move
             # num_nodes = 0
-            cur_node.regions.sort(key=lambda r: len(cur_node.regions_map[r].adj), reverse=True) # Optimization: color regions with most adjacent regions first
-            for region_name in cur_node.regions:
-                region = cur_node.regions_map[region_name]
-                for color in range(len(self.colors)):
+            # cur_node.regions.sort(key=lambda r: len(cur_node.regions_map[r].adj), reverse=True) # Optimization: color regions with most adjacent regions first
+            for color in range(len(self.colors)):
+                cur_node.regions.sort(key=lambda r: cur_node.regions_map[r].get_num_adj(color, cur_node.regions_map), reverse=True)
+                for region_name in cur_node.regions:
+                    region = cur_node.regions_map[region_name]
                     if region.color == color:
                         continue
                     # num_nodes += 1
